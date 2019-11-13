@@ -12,6 +12,15 @@
         android:background="@drawable/tela_5"
         android:orientation="vertical">
 
+        <Spinner
+            android:id="@+id/spinnerIdioma2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/languageArray"
+            android:spinnerMode="dropdown"
+            android:visibility="visible"
+            tools:visibility="visible" />
+
         <Button
             android:id="@+id/btnEnviar"
             android:layout_width="184dp"

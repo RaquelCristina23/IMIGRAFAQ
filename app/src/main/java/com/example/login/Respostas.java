@@ -45,20 +45,20 @@ public class Respostas extends AppCompatActivity {
         comentarios = new ArrayList<>();
 
         txt_comentario = (TextView) (findViewById(R.id.editTxtComentario));
-        txt_resposta =(TextView) (findViewById(R.id.txt_resposta));
-        btn_editar =  (Button) (findViewById(R.id.btn_editar));
+        txt_resposta = (TextView) (findViewById(R.id.txt_resposta));
+        btn_editar = (Button) (findViewById(R.id.btn_editar));
         btn_enviar = (Button) (findViewById(R.id.btnEnviar));
         listComentario = (ListView) (findViewById(R.id.listViewComentarios));
 
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        usuarioReference = database.getReference("usuarios/"+  currentFirebaseUser.getUid());
+        usuarioReference = database.getReference("usuarios/" + currentFirebaseUser.getUid());
 
 
         Intent intent = getIntent();
         id = (String) intent.getSerializableExtra("ID");
         pergunta = (String) intent.getSerializableExtra("PERGUNTA");
         resposta = (String) intent.getSerializableExtra("RESPOSTA");
-        categoria= (String) intent.getSerializableExtra("CATEGORIA");
+        categoria = (String) intent.getSerializableExtra("CATEGORIA");
 
         comentarioReference = database.getReference("categorias/" + categoria + '/' + id + "/comentarios");
 
@@ -86,18 +86,19 @@ public class Respostas extends AppCompatActivity {
 
                 if (isAdmin) {
                     btn_editar.setVisibility(View.VISIBLE);
-                }else{
+                } else {
                     btn_editar.setVisibility(View.GONE);
                 }
 
             }
+
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(getApplicationContext(), "Ocorreu um erro", Toast.LENGTH_LONG).show();
             }
         });
 
-        btn_enviar.setOnClickListener(new android.view.View.OnClickListener(){
+        btn_enviar.setOnClickListener(new android.view.View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 cadastrarComentario();
@@ -116,14 +117,28 @@ public class Respostas extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Ocorreu um erro", Toast.LENGTH_LONG).show();
             }
         });
-        //deletar comentário
-        listComentario.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+        usuarioReference.child("email").addValueEventListener(new ValueEventListener() {
+
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Comentario comentario = comentarios.get(position);
-                comentarioReference.child(comentario.getId()).removeValue();
-                Toast.makeText(getApplicationContext(), "Comentário removido", Toast.LENGTH_SHORT).show();
-                return true;
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                if ( usuarioReference.child("email") == comentarioReference.child("user") ) {
+                    listComentario.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                            Comentario comentario = comentarios.get(position);
+                            comentarioReference.child(comentario.getId()).removeValue();
+                            Toast.makeText(getApplicationContext(), "Comentário removido", Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+                    });
+                }
+
+            }
+
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Ocorreu um erro", Toast.LENGTH_LONG).show();
             }
         });
 

@@ -2,8 +2,9 @@ package com.example.login;
 
 public class Usuario {
 
-    String email, id;
-        boolean admin;
+    String email, id, idioma;
+    boolean admin;
+
 
     public String getId() {
         return id;
@@ -29,14 +30,24 @@ public class Usuario {
         this.admin = admin;
     }
 
+    public String getIdioma() {
+        return idioma;
+    }
+
+    public void setIdioma(String idioma) {
+        this.idioma = idioma;
+    }
+
+
     public Usuario(){
 
     }
 
-    public Usuario(String email, boolean admin , String id) {
+    public Usuario(String email, boolean admin , String id, String idioma) {
         this.email = email;
         this.admin = admin;
         this.id = id;
+        this.idioma= idioma;
 
     }
 

@@ -50,7 +50,7 @@ public class AddTopico extends AppCompatActivity {
         });
 
     }
-    //busca no firebase o usuario conectado e se ele tem permissão
+
     private void cadastrarComentario(){
         String pergunta = this.pergunta.getText().toString().trim();
         String resposta = this.resposta.getText().toString().trim();

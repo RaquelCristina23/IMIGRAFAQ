@@ -2,6 +2,7 @@ package com.example.login;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -43,7 +44,7 @@ public class ListarTopicos extends AppCompatActivity {
         topicosReference = database.getReference("categorias/" + categoria);
 
         FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        usuarioReference = database.getReference("usuarios/"+  currentFirebaseUser.getUid());
+        usuarioReference = database.getReference("usuarios/" + currentFirebaseUser.getUid());
 
         btnCadastrar = findViewById(R.id.btn_Cadastrar);
 
@@ -60,7 +61,6 @@ public class ListarTopicos extends AppCompatActivity {
             }
         });
 
-        //verifica permissão
         usuarioReference.child("admin").addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -74,6 +74,7 @@ public class ListarTopicos extends AppCompatActivity {
                 }
 
             }
+
             @Override
             public void onCancelled(DatabaseError error) {
                 Toast.makeText(getApplicationContext(), "Ocorreu um erro", Toast.LENGTH_LONG).show();
@@ -97,7 +98,6 @@ public class ListarTopicos extends AppCompatActivity {
         });
 
 
-
         //abrir a resposta da pergunta selecionada
         listTopicos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -114,17 +114,32 @@ public class ListarTopicos extends AppCompatActivity {
             }
         });
 
-        //deletar tópico
-        listTopicos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+
+        usuarioReference.child("admin").addValueEventListener(new ValueEventListener() {
             @Override
-            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                Topico topico = topicos.get(position);
-                topicosReference.child(topico.getId()).removeValue();
-                Toast.makeText(getApplicationContext(), "Tópico removido", Toast.LENGTH_SHORT).show();
-                return true;
+            public void onDataChange(DataSnapshot dataSnapshot) {
+
+                Boolean isAdmin = dataSnapshot.getValue().toString() == "true";
+
+                if (isAdmin) {
+
+                    listTopicos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+                        @Override
+                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                            Topico topico = topicos.get(position);
+                            topicosReference.child(topico.getId()).removeValue();
+                            Toast.makeText(getApplicationContext(), "Tópico removido", Toast.LENGTH_SHORT).show();
+                            return true;
+                        }
+                    });
+
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError error) {
+                Toast.makeText(getApplicationContext(), "Ocorreu um erro", Toast.LENGTH_LONG).show();
             }
         });
-
     }
 
     private void recarregarLista(DataSnapshot dataSnapshot) {

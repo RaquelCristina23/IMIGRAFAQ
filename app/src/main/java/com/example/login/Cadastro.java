@@ -53,37 +53,6 @@ public class Cadastro extends AppCompatActivity {
         btnCadastrar = findViewById(R.id.btnCadastrar);
         btnVoltar = findViewById(R.id.btnVoltar);
 
-        final Spinner spinnerIdiomas = (Spinner) findViewById(R.id.spinnerIdioma);
-
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
-                R.array.languageArray, android.R.layout.simple_spinner_item);
-
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-        spinnerIdiomas.setAdapter(adapter);
-
-        spinnerIdiomas.setOnItemSelectedListener(new  AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView,
-                                       View view, int i, long l) {
-                String selectedItemText = (String) spinnerIdiomas.getSelectedItem();
-
-                if (!selectedItemText.equals("Idioma")) {
-                    if (!selectedItemText.equals("Português")) {
-                        //salvar linguagem com cadastro do usuario
-
-                    }
-                    else if(!selectedItemText.equals("Criole")){
-                        //salvar linguagem com cadastro do usuario
-
-                    }
-
-                }
-            }
-            public void onNothingSelected(AdapterView<?> arg0) {
-
-            }
-        });
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -137,12 +106,48 @@ public class Cadastro extends AppCompatActivity {
 
                 if (task.isSuccessful()) {
 
+
+                    final Spinner spinnerIdiomas = (Spinner) findViewById(R.id.spinnerIdioma);
+
+                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
+                            R.array.languageArray, android.R.layout.simple_spinner_item);
+
+                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
+                    spinnerIdiomas.setAdapter(adapter);
+
+                    spinnerIdiomas.setOnItemSelectedListener(new  AdapterView.OnItemSelectedListener() {
+                        @Override
+                        public void onItemSelected(AdapterView<?> adapterView,
+                                                   View view, int i, long l) {
+                            String selectedItemText = (String) spinnerIdiomas.getSelectedItem();
+
+                            if (!selectedItemText.equals("Idioma")) {
+                                if (!selectedItemText.equals("Português")) {
+
+                                }
+                                else if(!selectedItemText.equals("Criole")){
+
+                                }
+
+
+                            }
+                        }
+                        public void onNothingSelected(AdapterView<?> arg0) {
+                            Toast.makeText(Cadastro.this, "Escolha um idioma", Toast.LENGTH_SHORT).show();
+                        }
+                    });
+
                     FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
                     Usuario usuario = new Usuario();
+                    usuario.getIdioma();
+
                     usuario.setAdmin(false);
                     usuario.setEmail(email);
                     usuario.setId(currentFirebaseUser.getUid());
+
+
 
                     usuarioReference.child(currentFirebaseUser.getUid()).setValue(usuario);
 

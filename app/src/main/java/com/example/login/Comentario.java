@@ -34,9 +34,10 @@ public class Comentario {
 
     }
 
-    public Comentario(String IdComentario, String txtComentario){
+    public Comentario(String IdComentario, String txtComentario,String user){
         this.id = IdComentario;
         this.comentario = txtComentario;
+        this.user= user;
     }
 
 }
