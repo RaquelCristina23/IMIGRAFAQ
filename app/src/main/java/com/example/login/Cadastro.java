@@ -3,6 +3,7 @@ package com.example.login;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -25,13 +26,10 @@ import com.google.firebase.database.FirebaseDatabase;
 public class Cadastro extends AppCompatActivity {
 
     private EditText edtEmail, edtSenha, edtConfirmarSenha;
-
+    private Spinner spinnerIdiomas;
     private Button btnCadastrar, btnVoltar;
-
     private FirebaseAuth firebaseAuth;
-
     private ProgressDialog progressDialog;
-
     private FirebaseDatabase database;
     private DatabaseReference usuarioReference;
 
@@ -42,7 +40,7 @@ public class Cadastro extends AppCompatActivity {
         setContentView(R.layout.activity_cadastro);
 
         database = FirebaseDatabase.getInstance();
-        usuarioReference= database.getReference("usuarios");
+        usuarioReference = database.getReference("usuarios");
 
         firebaseAuth = FirebaseAuth.getInstance();
         progressDialog = new ProgressDialog(this);
@@ -50,9 +48,14 @@ public class Cadastro extends AppCompatActivity {
         edtEmail = findViewById(R.id.txtEmail);
         edtSenha = findViewById(R.id.edtSenha);
         edtConfirmarSenha = findViewById(R.id.edtConfirmaSenha);
+        spinnerIdiomas = findViewById(R.id.spinnerIdioma);
         btnCadastrar = findViewById(R.id.btnCadastrar);
         btnVoltar = findViewById(R.id.btnVoltar);
 
+        // Adiciona as opções no spinner
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(), R.array.languageArray, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerIdiomas.setAdapter(adapter);
 
         btnCadastrar.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -81,6 +84,7 @@ public class Cadastro extends AppCompatActivity {
         String confirmarSenha = edtConfirmarSenha.getText().toString().trim();
 
         if (email.equals("")) {
+
             Toast.makeText(getApplicationContext(), "Campo 'Email' é obrigatório", Toast.LENGTH_LONG).show();
             return;
         }
@@ -106,48 +110,21 @@ public class Cadastro extends AppCompatActivity {
 
                 if (task.isSuccessful()) {
 
-
-                    final Spinner spinnerIdiomas = (Spinner) findViewById(R.id.spinnerIdioma);
-
-                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(getApplicationContext(),
-                            R.array.languageArray, android.R.layout.simple_spinner_item);
-
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
-                    spinnerIdiomas.setAdapter(adapter);
-
-                    spinnerIdiomas.setOnItemSelectedListener(new  AdapterView.OnItemSelectedListener() {
-                        @Override
-                        public void onItemSelected(AdapterView<?> adapterView,
-                                                   View view, int i, long l) {
-                            String selectedItemText = (String) spinnerIdiomas.getSelectedItem();
-
-                            if (!selectedItemText.equals("Idioma")) {
-                                if (!selectedItemText.equals("Português")) {
-
-                                }
-                                else if(!selectedItemText.equals("Criole")){
-
-                                }
-
-
-                            }
-                        }
-                        public void onNothingSelected(AdapterView<?> arg0) {
-                            Toast.makeText(Cadastro.this, "Escolha um idioma", Toast.LENGTH_SHORT).show();
-                        }
-                    });
-
                     FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
 
-                    Usuario usuario = new Usuario();
-                    usuario.getIdioma();
+                    String idioma = "";
 
+                    if (spinnerIdiomas.getSelectedItemPosition() == 0) {
+                        idioma = "pt-br";
+                    } else {
+                        idioma = "fr-ht";
+                    }
+
+                    Usuario usuario = new Usuario();
+                    usuario.setIdioma(idioma);
                     usuario.setAdmin(false);
                     usuario.setEmail(email);
                     usuario.setId(currentFirebaseUser.getUid());
-
-
 
                     usuarioReference.child(currentFirebaseUser.getUid()).setValue(usuario);
 

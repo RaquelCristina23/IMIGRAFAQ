@@ -1,0 +1,15 @@
+<resources>
+
+    <string name="categoriaSaudeFrHt">Sante</string>
+    <string name="categoriaEducaçãoFrHt">Edikasyon</string>
+    <string name="categoriaEmpregosFrHt">travay</string>
+    <string name="categoriaCrasFrHt">cras</string>
+    <string name="categoriaOnibusFrHt">otobis</string>
+    <string name="categoriaContatoFrHt">kontak</string>
+    <string name="categoriaEnviarFrHt">voye</string>
+    <string name="categoriaCadastrarFrHt">enskri</string>
+    <string name="categoriaVoltarFrHt">tounen</string>
+    <string name="categoriaLoginFrHt">login</string>
+    <string name="categoriaEditarFrHt">modifye</string>
+
+</resources>

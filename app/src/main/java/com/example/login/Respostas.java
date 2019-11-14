@@ -1,4 +1,5 @@
 package com.example.login;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -28,19 +29,22 @@ import static com.example.login.R.layout.activity_respostas;
 public class Respostas extends AppCompatActivity {
 
     private String resposta, id, pergunta, categoria;
-    Button btn_editar,btn_enviar;
-    TextView txt_resposta,txt_comentario;
+    Button btn_editar, btn_enviar;
+    TextView txt_resposta, txt_comentario;
     private FirebaseDatabase database;
     private DatabaseReference comentarioReference;
     ArrayList<Comentario> comentarios;
     ListView listComentario;
     private DatabaseReference usuarioReference;
+    private String userEmail;
+    private Boolean isAdmin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(activity_respostas);
         database = FirebaseDatabase.getInstance();
+
 
         comentarios = new ArrayList<>();
 
@@ -50,10 +54,6 @@ public class Respostas extends AppCompatActivity {
         btn_enviar = (Button) (findViewById(R.id.btnEnviar));
         listComentario = (ListView) (findViewById(R.id.listViewComentarios));
 
-        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        usuarioReference = database.getReference("usuarios/" + currentFirebaseUser.getUid());
-
-
         Intent intent = getIntent();
         id = (String) intent.getSerializableExtra("ID");
         pergunta = (String) intent.getSerializableExtra("PERGUNTA");
@@ -61,6 +61,8 @@ public class Respostas extends AppCompatActivity {
         categoria = (String) intent.getSerializableExtra("CATEGORIA");
 
         comentarioReference = database.getReference("categorias/" + categoria + '/' + id + "/comentarios");
+        FirebaseUser currentFirebaseUser = FirebaseAuth.getInstance().getCurrentUser();
+        usuarioReference = database.getReference("usuarios/" + currentFirebaseUser.getUid());
 
         txt_resposta.setText(resposta);
 
@@ -82,7 +84,7 @@ public class Respostas extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Boolean isAdmin = dataSnapshot.getValue().toString() == "true";
+                isAdmin = dataSnapshot.getValue().toString() == "true";
 
                 if (isAdmin) {
                     btn_editar.setVisibility(View.VISIBLE);
@@ -106,6 +108,24 @@ public class Respostas extends AppCompatActivity {
             }
         });
 
+        listComentario.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
+            @Override
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+                Comentario comentario = comentarios.get(position);
+
+                if (comentario.getUser().equals(userEmail) || isAdmin == true) {
+
+                    comentarioReference.child(comentario.getId()).removeValue();
+                    Toast.makeText(getApplicationContext(), "Comentário removido", Toast.LENGTH_SHORT).show();
+
+                }
+
+                return true;
+
+            }
+        });
+
         comentarioReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
@@ -117,22 +137,13 @@ public class Respostas extends AppCompatActivity {
                 Toast.makeText(getApplicationContext(), "Ocorreu um erro", Toast.LENGTH_LONG).show();
             }
         });
+
         usuarioReference.child("email").addValueEventListener(new ValueEventListener() {
 
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                if ( usuarioReference.child("email") == comentarioReference.child("user") ) {
-                    listComentario.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                        @Override
-                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                            Comentario comentario = comentarios.get(position);
-                            comentarioReference.child(comentario.getId()).removeValue();
-                            Toast.makeText(getApplicationContext(), "Comentário removido", Toast.LENGTH_SHORT).show();
-                            return true;
-                        }
-                    });
-                }
+                userEmail = dataSnapshot.getValue().toString();
 
             }
 

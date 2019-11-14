@@ -31,7 +31,6 @@ public class UpdateTopico extends AppCompatActivity {
         categoria = getIntent().getStringExtra("CATEGORIA");
         topicosReference = database.getReference("categorias/" + categoria);
 
-        //busca no firebase o usuario conectado e se ele tem permissão
         edt_pergunta = findViewById(R.id.Pergunta);
         edt_resposta = findViewById(R.id.Resposta);
         btn_enviar = findViewById(R.id.btnEnviar);

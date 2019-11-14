@@ -15,14 +15,14 @@ public class ComentarioAdapter extends ArrayAdapter<Comentario> {
     private final Context context;
     private final ArrayList<Comentario> itens;
 
-    public ComentarioAdapter (Context context, ArrayList<Comentario> itens){
+    public ComentarioAdapter(Context context, ArrayList<Comentario> itens) {
 
         super(context, R.layout.activity_comentario_adapter, itens);
         this.context = context;
         this.itens = itens;
     }
 
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.activity_comentario_adapter, null, true);

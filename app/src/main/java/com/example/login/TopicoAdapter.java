@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
+
 import java.util.ArrayList;
 
 public class TopicoAdapter extends ArrayAdapter<Topico> {
@@ -14,14 +15,14 @@ public class TopicoAdapter extends ArrayAdapter<Topico> {
     private final Context context;
     private final ArrayList<Topico> itens;
 
-    public TopicoAdapter(Context context, ArrayList<Topico> itens){
+    public TopicoAdapter(Context context, ArrayList<Topico> itens) {
 
         super(context, R.layout.activity_topico, itens);
         this.context = context;
         this.itens = itens;
     }
 
-    public View getView(int position, View convertView, ViewGroup parent){
+    public View getView(int position, View convertView, ViewGroup parent) {
 
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View rowView = inflater.inflate(R.layout.activity_topico, null, true);

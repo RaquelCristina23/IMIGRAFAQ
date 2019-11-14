@@ -1,4 +1,6 @@
 package com.example.login;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -30,9 +32,16 @@ public class ListarTopicos extends AppCompatActivity {
 
     private FloatingActionButton btnCadastrar;
 
+    private Boolean isAdmin;
+
+    private String idiomaUsuario;
+
+    private DataSnapshot topicosSnapshot;
+
     ListView listTopicos;
     ArrayList<Topico> topicos;
     String categoria;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +74,7 @@ public class ListarTopicos extends AppCompatActivity {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
 
-                Boolean isAdmin = dataSnapshot.getValue().toString() == "true";
+                isAdmin = dataSnapshot.getValue().toString() == "true";
 
                 if (isAdmin) {
                     btnCadastrar.show();
@@ -81,6 +90,20 @@ public class ListarTopicos extends AppCompatActivity {
             }
         });
 
+        usuarioReference.child("idioma").addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
+                idiomaUsuario = dataSnapshot.getValue().toString();
+                recarregarLista();
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError databaseError) {
+
+            }
+        });
+
+
         listTopicos = (ListView) findViewById(R.id.listTopicos);
 
         topicos = new ArrayList<>();
@@ -88,7 +111,8 @@ public class ListarTopicos extends AppCompatActivity {
         topicosReference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                recarregarLista(dataSnapshot);
+                topicosSnapshot = dataSnapshot;
+                recarregarLista();
             }
 
             @Override
@@ -114,44 +138,33 @@ public class ListarTopicos extends AppCompatActivity {
             }
         });
 
-
-        usuarioReference.child("admin").addValueEventListener(new ValueEventListener() {
+        listTopicos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-
-                Boolean isAdmin = dataSnapshot.getValue().toString() == "true";
-
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
                 if (isAdmin) {
-
-                    listTopicos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
-                        @Override
-                        public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                            Topico topico = topicos.get(position);
-                            topicosReference.child(topico.getId()).removeValue();
-                            Toast.makeText(getApplicationContext(), "Tópico removido", Toast.LENGTH_SHORT).show();
-                            return true;
-                        }
-                    });
-
+                    Topico topico = topicos.get(position);
+                    topicosReference.child(topico.getId()).removeValue();
+                    Toast.makeText(getApplicationContext(), "Tópico removido", Toast.LENGTH_SHORT).show();
                 }
-            }
-            @Override
-            public void onCancelled(DatabaseError error) {
-                Toast.makeText(getApplicationContext(), "Ocorreu um erro", Toast.LENGTH_LONG).show();
+                return true;
             }
         });
     }
 
-    private void recarregarLista(DataSnapshot dataSnapshot) {
+
+    private void recarregarLista() {
+
+        if (topicosSnapshot == null) return;
 
         topicos.clear();
 
-        for (DataSnapshot postSnapshot : dataSnapshot.getChildren()) {
+        for (DataSnapshot postSnapshot : topicosSnapshot.getChildren()) {
 
             Topico topico = postSnapshot.getValue(Topico.class);
 
-            topicos.add(topico);
-
+            if (topico.getIdioma().equals(idiomaUsuario)) {
+                topicos.add(topico);
+            }
         }
 
         TopicoAdapter lancamentoAdapter = new TopicoAdapter(this, topicos);

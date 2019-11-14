@@ -2,9 +2,18 @@ package com.example.login;
 
 public class Topico {
 
+    private String idioma;
     private String pergunta;
     private String resposta;
     private String id;
+
+    public String getIdioma() {
+        return idioma;
+    }
+
+    public void setIdioma(String idioma) {
+        this.idioma = idioma;
+    }
 
     public String getPergunta() {
         return pergunta;
@@ -34,10 +43,12 @@ public class Topico {
 
     }
 
-    public Topico(String pergunta, String resposta, String id) {
+    public Topico(String idioma, String pergunta, String resposta, String id) {
+        this.idioma = idioma;
         this.pergunta = pergunta;
         this.resposta = resposta;
         this.id = id;
+
 
     }
 

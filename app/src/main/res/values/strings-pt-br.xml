@@ -1,0 +1,16 @@
+<resources>
+
+    <string name="categoriaSaudePtBr">Saúde</string>
+    <string name="categoriaEducacaoPtBr">Educação</string>
+    <string name="categoriaEmpregosPtBr">empregos</string>
+    <string name="categoriaCrasPtBr">cras</string>
+    <string name="categoriaOnibusPtBr">horários de ônibus</string>
+    <string name="categoriaContatoPtBr">contato</string>
+    <string name="categoriaEnviarPtBr">enviar</string>
+    <string name="categoriaCadastrarPtBr">cadastrar</string>
+    <string name="categoriaVoltarPtBr">voltar</string>
+    <string name="categoriaLoginPtBr">login</string>
+    <string name="categoriaEditarPtBr">editar</string>
+
+
+</resources>

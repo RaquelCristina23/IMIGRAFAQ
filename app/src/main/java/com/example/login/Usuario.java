@@ -5,7 +5,6 @@ public class Usuario {
     String email, id, idioma;
     boolean admin;
 
-
     public String getId() {
         return id;
     }
@@ -39,15 +38,15 @@ public class Usuario {
     }
 
 
-    public Usuario(){
+    public Usuario() {
 
     }
 
-    public Usuario(String email, boolean admin , String id, String idioma) {
+    public Usuario(String email, boolean admin, String id, String idioma) {
         this.email = email;
         this.admin = admin;
         this.id = id;
-        this.idioma= idioma;
+        this.idioma = idioma;
 
     }
 

@@ -13,6 +13,7 @@ public class Comentario {
     public String getComentario() {
         return comentario;
     }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -30,14 +31,14 @@ public class Comentario {
     }
 
 
-    public Comentario(){
+    public Comentario() {
 
     }
 
-    public Comentario(String IdComentario, String txtComentario,String user){
+    public Comentario(String IdComentario, String txtComentario, String user) {
         this.id = IdComentario;
         this.comentario = txtComentario;
-        this.user= user;
+        this.user = user;
     }
 
 }
